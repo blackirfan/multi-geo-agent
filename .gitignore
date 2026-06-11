@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.eggs/
+*.whl
+
+# Data files (large; fetched by scripts/fetch_data.py)
+data/vector/*.json
+data/vector/*.gpkg
+data/vector/*.geojson
+data/vector/*.shp
+data/vector/*.dbf
+data/vector/*.prj
+data/vector/*.shx
+data/vector/*.zip
+data/raster/*.tif
+data/raster/*.tiff
+data/raster/*.hgt
+data/raster/*.hgt.gz
+data/raster/*.zip
+!data/vector/.gitkeep
+!data/raster/.gitkeep
+
+# Generated outputs
+reports/*.pdf
+reports/*.html
+reports/*.png
+!reports/.gitkeep
+
+# DuckDB
+*.duckdb
+*.duckdb.wal
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# macOS
+.DS_Store

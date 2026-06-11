@@ -1,0 +1,6 @@
+{
+  "/query":   { "target": "http://localhost:8000", "secure": false, "changeOrigin": true },
+  "/reports": { "target": "http://localhost:8000", "secure": false, "changeOrigin": true },
+  "/layers":  { "target": "http://localhost:8000", "secure": false, "changeOrigin": true },
+  "/health":  { "target": "http://localhost:8000", "secure": false, "changeOrigin": true }
+}

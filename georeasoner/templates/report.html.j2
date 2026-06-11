@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoReasoner — Flood Vulnerability Report: {{ area_name }}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 11pt;
+      color: #1a1a2e;
+      line-height: 1.55;
+      padding: 0;
+    }
+    .cover {
+      background: linear-gradient(135deg, #0f3460 0%, #16213e 60%, #1a1a2e 100%);
+      color: #e0e0e0;
+      padding: 60px 48px 50px;
+      min-height: 200px;
+    }
+    .cover h1 {
+      font-size: 24pt;
+      font-weight: 700;
+      color: #e94560;
+      margin-bottom: 8px;
+    }
+    .cover h2 {
+      font-size: 16pt;
+      font-weight: 400;
+      color: #a8dadc;
+      margin-bottom: 24px;
+    }
+    .cover .meta {
+      font-size: 9pt;
+      color: #8892a4;
+      display: flex;
+      gap: 32px;
+    }
+    .cover .meta span b { color: #c8d8e8; }
+
+    .body { padding: 36px 48px; }
+
+    h3 {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #0f3460;
+      margin: 28px 0 10px;
+      border-bottom: 2px solid #e94560;
+      padding-bottom: 4px;
+    }
+    h4 {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #16213e;
+      margin: 18px 0 6px;
+    }
+    p { margin-bottom: 10px; }
+
+    .query-box {
+      background: #f0f4f8;
+      border-left: 4px solid #e94560;
+      padding: 10px 16px;
+      font-style: italic;
+      color: #16213e;
+      margin: 14px 0 20px;
+      font-size: 10.5pt;
+    }
+
+    /* Ranking table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin: 14px 0 24px;
+    }
+    thead tr {
+      background: #0f3460;
+      color: #fff;
+    }
+    thead th {
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    tbody tr:nth-child(even) { background: #f0f4f8; }
+    tbody td { padding: 7px 12px; }
+    .fsi-bar-cell { width: 120px; }
+    .fsi-bar {
+      display: inline-block;
+      height: 10px;
+      background: #e94560;
+      border-radius: 3px;
+      vertical-align: middle;
+    }
+    .rank-badge {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 9pt;
+      background: #0f3460;
+      color: #fff;
+    }
+    .rank-badge.top3 { background: #e94560; }
+
+    /* Map placeholder */
+    .map-container {
+      width: 100%;
+      border: 1px solid #dce3ec;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 14px 0 24px;
+    }
+    .map-placeholder {
+      background: #e8f0f7;
+      text-align: center;
+      padding: 40px;
+      color: #5a7a99;
+      font-size: 10pt;
+    }
+
+    /* Methods section */
+    .weights-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 14px 0 20px;
+    }
+    .weight-card {
+      background: #f0f4f8;
+      border-top: 3px solid #0f3460;
+      padding: 10px 14px;
+      border-radius: 4px;
+    }
+    .weight-card .pct {
+      font-size: 20pt;
+      font-weight: 700;
+      color: #e94560;
+      line-height: 1;
+    }
+    .weight-card .label {
+      font-size: 9pt;
+      color: #5a7a99;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+
+    .disclaimer {
+      font-size: 8.5pt;
+      color: #8892a4;
+      border-top: 1px solid #dce3ec;
+      padding-top: 14px;
+      margin-top: 32px;
+    }
+    .answer-box {
+      background: #f7fafd;
+      border: 1px solid #dce3ec;
+      border-radius: 6px;
+      padding: 16px 20px;
+      font-size: 10pt;
+      line-height: 1.65;
+    }
+    .answer-box strong { color: #0f3460; }
+  </style>
+</head>
+<body>
+
+  <!-- Cover -->
+  <div class="cover">
+    <h1>GeoReasoner</h1>
+    <h2>Flood Vulnerability Assessment<br>{{ area_name }}</h2>
+    <div class="meta">
+      <span><b>Run ID</b> {{ run_id }}</span>
+      <span><b>Generated</b> {{ generated_at }}</span>
+      <span><b>Model</b> {{ model_name }}</span>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- Query -->
+    <h3>Analysis Query</h3>
+    <div class="query-box">{{ query }}</div>
+
+    <!-- Summary answer -->
+    <h3>Executive Summary</h3>
+    <div class="answer-box">
+      {% if answer %}
+        {{ answer | replace("**", "") | replace("\n\n", "<br><br>") | replace("\n", " ") }}
+      {% else %}
+        No summary generated.
+      {% endif %}
+    </div>
+
+    <!-- Map -->
+    <h3>Flood Susceptibility Index Map</h3>
+    {% if map_html %}
+      <div class="map-container">{{ map_html | safe }}</div>
+    {% else %}
+      <div class="map-container">
+        <div class="map-placeholder">
+          Interactive map not available in this PDF export.<br>
+          View the live map at <em>/</em> in the GeoReasoner web interface.
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- FSI Ranking -->
+    <h3>Upazila Flood Susceptibility Ranking</h3>
+    <p>Units ranked by mean Flood Susceptibility Index (FSI). FSI ranges from
+       0 (least susceptible) to 1 (most susceptible).</p>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Administrative Unit</th>
+          <th>Mean FSI</th>
+          <th>Max FSI</th>
+          <th>Relative Risk</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in ranking %}
+        <tr>
+          <td>
+            <span class="rank-badge {% if loop.index <= 3 %}top3{% endif %}">
+              {{ loop.index }}
+            </span>
+          </td>
+          <td>{{ row.name }}</td>
+          <td>{{ "%.4f" | format(row.mean_fsi) }}</td>
+          <td>{{ "%.4f" | format(row.max_fsi) }}</td>
+          <td class="fsi-bar-cell">
+            <span class="fsi-bar" style="width: {{ (row.mean_fsi * 110) | int }}px;"></span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Methods -->
+    <h3>Methodology</h3>
+    <h4>Flood Susceptibility Index (FSI)</h4>
+    <p>The FSI is computed via weighted overlay of four normalised geospatial layers.
+       Each layer is independently min-max normalised to [0, 1] before combining.</p>
+
+    <div class="weights-grid">
+      <div class="weight-card"><div class="pct">35%</div><div class="label">Elevation</div></div>
+      <div class="weight-card"><div class="pct">25%</div><div class="label">Terrain Slope</div></div>
+      <div class="weight-card"><div class="pct">25%</div><div class="label">River Proximity</div></div>
+      <div class="weight-card"><div class="pct">15%</div><div class="label">Land Cover</div></div>
+    </div>
+
+    <h4>Data Sources</h4>
+    <ul style="margin: 8px 0 16px 20px; line-height: 1.8;">
+      <li><b>DEM:</b> SRTM 90 m / AWS Terrain Tiles (synthetic fallback for CI)</li>
+      <li><b>Land Cover:</b> ESA WorldCover 10 m v200 (2021)</li>
+      <li><b>Waterways:</b> OpenStreetMap via OSMnx</li>
+      <li><b>Admin Boundaries:</b> GADM v4.1 Level 3 (Sylhet District)</li>
+    </ul>
+
+    <h4>Processing Pipeline</h4>
+    <ul style="margin: 8px 0 16px 20px; line-height: 1.8;">
+      <li>Planner: decomposes user query into analysis steps via Gemma 3 12B</li>
+      <li>GIS Analyst: loads and validates admin boundaries and waterway networks</li>
+      <li>Remote Sensing: ingests DEM and LULC rasters, derives slope layer</li>
+      <li>Hydrology: computes FSI and performs zonal statistics per upazila</li>
+      <li>Reasoner: generates scientific narrative from FSI ranking</li>
+    </ul>
+
+    <!-- Agent Trace -->
+    {% if agent_trace %}
+    <h3>Agent Execution Trace</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Tool</th>
+          <th>Status</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in agent_trace %}
+        <tr>
+          <td>{{ entry.agent }}</td>
+          <td>{{ entry.tool }}</td>
+          <td>{{ "OK" if "ERROR" not in (entry.result or "") else "ERROR" }}</td>
+          <td>{{ entry.timestamp }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    <div class="disclaimer">
+      <b>Disclaimer:</b> This report was generated automatically by GeoReasoner, an experimental
+      LLM-orchestrated multi-agent geospatial system. FSI values are indicative and should not
+      replace professional hydrological assessments. Synthetic data is used when real remote-sensing
+      inputs are unavailable. Results are for research and portfolio demonstration purposes only.
+    </div>
+
+  </div>
+</body>
+</html>
