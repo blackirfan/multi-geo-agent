@@ -29,7 +29,7 @@ type ExportFormat = 'pdf' | 'html';
         [(ngModel)]="state.query"
         [disabled]="state.isRunning()"
         rows="3"
-        placeholder="Which unions in Sylhet have the highest flood risk?"
+        placeholder="Which upazila in Sylhet have the highest flood risk?"
         class="w-full px-3 py-2 rounded-md bg-slate-700 border border-slate-600
                text-slate-100 text-sm resize-none
                placeholder:text-slate-500

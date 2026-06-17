@@ -400,7 +400,58 @@ Per-upazila FSI statistics are computed using `zonal_stats(admin_gdf, fsi_raster
                                     └────────────────────┘
 ```
 
-The Folium choropleth uses the Blues colour palette mapped to the `[0, 1]` FSI range. River polylines are rendered as a separate GeoJSON overlay in cyan (#00bcd4) at weight 1.5. Tooltips display upazila name, mean FSI, and rank on hover.
+### 8.1 Dynamic FSI Colour Scale
+
+A fixed 0–1 colour ramp is cartographically appropriate when FSI values span the full range, but in practice the output of a weighted raster overlay on a relatively homogeneous sub-region will cluster in a narrower band (e.g., 0.42–0.83 for Sylhet). Applying a fixed scale to such data compresses most of the variation into a narrow colour segment, making it difficult to visually distinguish upazilas that differ by meaningful amounts.
+
+GeoReasoner therefore implements a **data-driven adaptive scale**:
+
+**Figure 6b: Dynamic Colour Scale Decision Logic**
+
+```
+fsi_ranking received
+        │
+        ▼
+  Compute data_min, data_max
+  from mean_fsi values
+        │
+  data_range = max − min
+        │
+  ┌─────┴──────┐
+  │ range < 0.02│  → Fixed scale: Low 0–0.25 / Moderate 0.25–0.50
+  │             │                  High 0.50–0.75 / Very High 0.75–1.00
+  └─────┬──────┘
+        │
+  range ≥ 0.02  → Dynamic scale: divide [min, max] into 4 equal bands
+        │          step = (max − min) / 4
+        │          q1 = min + step      Low     [min, q1)
+        │          q2 = min + 2×step    Moderate [q1, q2)
+        │          q3 = min + 3×step    High     [q2, q3)
+        │                               Very High [q3, max]
+        ▼
+  Same 4 semantic colours (green→yellow→orange→red)
+  mapped to the 4 bands of the actual data range
+```
+
+**Example**: if upazilas score between 0.418 and 0.830:
+- Low: 0.418–0.521 (green)
+- Moderate: 0.521–0.624 (yellow)
+- High: 0.624–0.727 (orange)
+- Very High: 0.727–0.830 (red)
+
+Within each band the colour is interpolated linearly, so two upazilas differing by 0.02 FSI will always receive a noticeably different shade. The legend panel in both the Angular dashboard and the PDF report displays the actual numerical boundaries, annotated with "Scale fitted to data range" when dynamic stretching is active.
+
+This approach is equivalent to an equal-interval data classification (Brewer & Pickle, 2002) applied within the observed data range, preserving the semantic ordering (green = safer, red = more vulnerable) while maximising discriminability within the specific study area.
+
+**Table 3b: Colour Scale Behaviour by Data Range**
+
+| Scenario | Data range | Scale mode | Discriminability |
+|---|---|---|---|
+| Synthetic test data | 0.15–0.90 (range 0.75) | Fixed 0–1 | Good (spans all 4 bands) |
+| Sylhet real data (estimated) | 0.42–0.83 (range 0.41) | Dynamic | Excellent (full 4-colour spectrum) |
+| Near-homogeneous area | 0.60–0.61 (range 0.01) | Fixed 0–1 | Minimal — values genuinely similar |
+
+The Folium choropleth uses a four-stop green–yellow–orange–red colour palette. River polylines are rendered as a separate GeoJSON overlay in navy (#1a6ca8) at weight 1.5. Tooltips display upazila name, mean FSI, rank, and risk category on hover.
 
 The HTML report is generated first; WeasyPrint then converts it to PDF. If WeasyPrint is unavailable (missing `libpango` system library), the HTML path is returned and a warning is logged — this graceful fallback ensures `POST /reports` never raises HTTP 500 in a misconfigured environment.
 
@@ -549,6 +600,8 @@ The author thanks the Global Administrative Boundaries project (GADM), the Europ
 ---
 
 ## References
+
+Brewer, C. A., & Pickle, L. (2002). Evaluation of methods for classifying epidemiological data on choropleth maps in series. *Annals of the Association of American Geographers*, 92(4), 662–681.
 
 Bangladesh Bureau of Statistics (BBS). (2022). *Population and Housing Census 2022*. Bangladesh Bureau of Statistics, Dhaka.
 

@@ -3273,13 +3273,6 @@ var NavigationAdapterForLocation = class _NavigationAdapterForLocation extends L
   }], () => [], null);
 })();
 var PLATFORM_BROWSER_ID = "browser";
-var PLATFORM_SERVER_ID = "server";
-function isPlatformBrowser(platformId) {
-  return platformId === PLATFORM_BROWSER_ID;
-}
-function isPlatformServer(platformId) {
-  return platformId === PLATFORM_SERVER_ID;
-}
 var VERSION = new Version("21.2.17");
 var ViewportScroller = class _ViewportScroller {
   static ɵprov = ɵɵdefineInjectable({
@@ -4508,16 +4501,11 @@ export {
   PathLocationStrategy,
   Location,
   HashLocationStrategy,
-  NgIf,
-  NgStyle,
-  NgTemplateOutlet,
   CommonModule,
   PRECOMMIT_HANDLER_SUPPORTED,
   PlatformNavigation,
   NavigationAdapterForLocation,
   PLATFORM_BROWSER_ID,
-  isPlatformBrowser,
-  isPlatformServer,
   ViewportScroller
 };
-//# sourceMappingURL=chunk-JNPJVFNQ.js.map
+//# sourceMappingURL=chunk-Y6NHJA57.js.map

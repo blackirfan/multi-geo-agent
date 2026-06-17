@@ -45,3 +45,32 @@ html, body {
 
 /* ── PrimeNG overrides ────────────────────────────────────────── */
 .p-button { font-family: inherit !important; }
+
+/* ── Upazila name labels (permanent Leaflet tooltips) ─────────── */
+.upazila-label {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  pointer-events: none;
+  text-align: center;
+  line-height: 1.25;
+}
+.upazila-label::before { display: none !important; } /* hide tooltip stem */
+.upazila-label .lbl-name {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow:
+    0 0 3px #000, 0 0 3px #000,
+    1px 1px 4px rgba(0,0,0,0.95);
+  white-space: nowrap;
+}
+.upazila-label .lbl-fsi {
+  display: block;
+  font-size: 8px;
+  font-weight: 600;
+  color: #fbbf24;
+  text-shadow: 0 0 3px #000, 1px 1px 3px rgba(0,0,0,0.9);
+}

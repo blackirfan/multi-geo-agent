@@ -12,7 +12,7 @@ import {
 import {
   CommonModule,
   PLATFORM_BROWSER_ID
-} from "./chunk-JNPJVFNQ.js";
+} from "./chunk-Y6NHJA57.js";
 import {
   DomAdapter,
   XhrFactory,
@@ -1064,4 +1064,4 @@ export {
   provideClientHydration,
   VERSION
 };
-//# sourceMappingURL=chunk-34VRWF6P.js.map
+//# sourceMappingURL=chunk-XYN4LDAG.js.map

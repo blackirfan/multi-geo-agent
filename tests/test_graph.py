@@ -119,7 +119,7 @@ def test_hydro_tool_returns_ranking() -> None:
 # ── Full-pipeline integration tests ───────────────────────────────────────────
 
 @pytest.mark.parametrize("query", [
-    "Which unions in Sylhet have the highest flood risk?",
+    "Which upazila in Sylhet have the highest flood risk?",
     "Identify the most flood-vulnerable upazilas in Sylhet District.",
 ])
 def test_full_pipeline_with_fallback(query: str) -> None:
@@ -154,7 +154,7 @@ def test_pipeline_trace_has_all_agents() -> None:
     ]
 
     graph = assemble_graph()
-    state = empty_state("Which unions in Sylhet have the highest flood risk?")
+    state = empty_state("Which upazila in Sylhet have the highest flood risk?")
 
     with patches[0], patches[1], patches[2], patches[3], patches[4]:
         result: GeoReasonerState = graph.invoke(state)
@@ -176,7 +176,7 @@ def test_pipeline_ranking_is_sorted() -> None:
 
     graph = assemble_graph()
     with patches[0], patches[1], patches[2], patches[3], patches[4]:
-        result = graph.invoke(empty_state("Which unions in Sylhet have the highest flood risk?"))
+        result = graph.invoke(empty_state("Which upazila in Sylhet have the highest flood risk?"))
 
     ranking = result["fsi_ranking"]
     fsi_values = [r["mean_fsi"] for r in ranking]
@@ -195,7 +195,7 @@ def test_pipeline_answer_mentions_top_unit() -> None:
 
     graph = assemble_graph()
     with patches[0], patches[1], patches[2], patches[3], patches[4]:
-        result = graph.invoke(empty_state("Which unions in Sylhet have the highest flood risk?"))
+        result = graph.invoke(empty_state("Which upazila in Sylhet have the highest flood risk?"))
 
     top_name = result["fsi_ranking"][0]["name"]
     assert top_name in (result["answer"] or ""), \

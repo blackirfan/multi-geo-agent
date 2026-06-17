@@ -107,7 +107,7 @@
     }
     .rank-badge.top3 { background: #e94560; }
 
-    /* Map placeholder */
+    /* Map containers */
     .map-container {
       width: 100%;
       border: 1px solid #dce3ec;
@@ -121,6 +121,14 @@
       padding: 40px;
       color: #5a7a99;
       font-size: 10pt;
+    }
+    /* Interactive Folium map → visible in browser, hidden in PDF */
+    .interactive-map { display: block; }
+    /* Static PNG map → hidden in browser, visible in PDF */
+    .static-map      { display: none; }
+    @media print {
+      .interactive-map { display: none !important; }
+      .static-map      { display: block !important; }
     }
 
     /* Methods section */
@@ -199,16 +207,32 @@
 
     <!-- Map -->
     <h3>Flood Susceptibility Index Map</h3>
-    {% if map_html %}
-      <div class="map-container">{{ map_html | safe }}</div>
-    {% else %}
-      <div class="map-container">
+
+    <!-- Interactive Folium map: shown in browser, hidden by @media print -->
+    <div class="interactive-map map-container">
+      {% if map_html %}
+        {{ map_html | safe }}
+      {% else %}
         <div class="map-placeholder">
-          Interactive map not available in this PDF export.<br>
-          View the live map at <em>/</em> in the GeoReasoner web interface.
+          Interactive map unavailable. Open the HTML report in a browser for the live map.
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- Static PNG map: hidden in browser, rendered by WeasyPrint for PDF -->
+    <div class="static-map map-container">
+      {% if map_png_b64 %}
+        <img
+          src="data:image/png;base64,{{ map_png_b64 }}"
+          alt="Flood Susceptibility Index map — {{ area_name }}"
+          style="width:100%;display:block;border-radius:4px;">
+      {% else %}
+        <div class="map-placeholder">
+          Map image could not be generated for this export.<br>
+          Ensure GeoPandas and Matplotlib are installed.
+        </div>
+      {% endif %}
+    </div>
 
     <!-- FSI Ranking -->
     <h3>Upazila Flood Susceptibility Ranking</h3>

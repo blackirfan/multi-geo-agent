@@ -13,7 +13,7 @@ const idleStatuses = (): StatusMap =>
 
 @Injectable({ providedIn: 'root' })
 export class AppStateService {
-  readonly query   = signal('Which unions in Sylhet have the highest flood risk?');
+  readonly query   = signal('Which upazila in Sylhet have the highest flood risk?');
   readonly isRunning = signal(false);
   readonly result  = signal<QueryResponse | null>(null);
   readonly statuses = signal<StatusMap>(idleStatuses());
