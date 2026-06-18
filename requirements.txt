@@ -1,0 +1,57 @@
+# ============================================================
+# GeoReasoner — Python dependencies
+# Python 3.12+ required
+#
+# Install (production):
+#   pip install -r requirements.txt
+#
+# Install (development, adds pytest / ruff / mypy):
+#   pip install -r requirements.txt -r requirements-dev.txt
+#
+# System libraries required before pip install:
+#   macOS  : brew install pango cairo glib libspatialindex
+#   Ubuntu : sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0 \
+#                libcairo2 libgdal-dev libspatialindex-dev
+# ============================================================
+
+# ── Web framework ────────────────────────────────────────────
+fastapi>=0.115
+uvicorn[standard]>=0.30
+
+# ── LangGraph / LangChain (LM Studio via OpenAI-compatible API) ─
+langgraph>=0.2
+langchain>=0.3
+langchain-openai>=0.2
+
+# ── Geospatial core ──────────────────────────────────────────
+geopandas>=1.0
+pyogrio>=0.9          # fast vector I/O backend for GeoPandas
+rasterio>=1.3
+shapely>=2.0
+pyproj>=3.7
+osmnx>=2.0            # OpenStreetMap network download
+rtree>=1.2            # spatial indexing (required by GeoPandas)
+
+# ── Data / storage ───────────────────────────────────────────
+duckdb>=1.1
+numpy>=1.26
+scipy>=1.13           # distance transform for river proximity raster
+pandas>=2.2
+
+# ── Maps / reporting ─────────────────────────────────────────
+folium>=0.17          # interactive HTML maps
+leafmap>=0.35         # leafmap wrappers
+plotly>=5.24          # interactive charts
+weasyprint>=62        # HTML → PDF (requires pango system library)
+jinja2>=3.1           # HTML report templating
+matplotlib>=3.9       # static PNG map generation for PDF reports
+
+# ── Utilities ────────────────────────────────────────────────
+httpx>=0.27
+requests>=2.32
+python-dotenv>=1.0
+pydantic>=2.9
+pydantic-settings>=2.6
+rich>=13.9
+typer>=0.12
+tqdm>=4.66

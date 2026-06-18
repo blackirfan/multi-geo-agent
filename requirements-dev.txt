@@ -1,0 +1,11 @@
+# ============================================================
+# GeoReasoner — development / testing extras
+# Usage: pip install -r requirements.txt -r requirements-dev.txt
+# ============================================================
+
+pytest>=8.3
+pytest-asyncio>=0.24
+pytest-cov>=6.0
+ruff>=0.6
+mypy>=1.11
+types-requests>=2.32
